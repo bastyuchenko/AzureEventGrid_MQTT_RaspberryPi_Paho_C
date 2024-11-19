@@ -1,0 +1,32 @@
+{
+    "version": 2,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 20,
+        "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "raspberry_pi",
+            "displayName": "C RaspberryPi PoC",
+            "binaryDir": "${sourceDir}/src/build",
+            "generator": "Ninja",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "PRESET_PATH": "${sourceDir}/src"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "raspberry_pi",
+            "displayName": "C RaspberryPi PoC",
+            "configurePreset": "raspberry_pi",
+            "targets": [
+                "raspberry_pi_client",
+                "server_client"
+            ]
+        }
+    ],
+    "testPresets": []
+}

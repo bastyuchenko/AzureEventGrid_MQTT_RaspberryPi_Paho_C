@@ -1,0 +1,65 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "C RaspberryPi Client",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/build/raspberry_pi_client",
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/src/raspberry_pi_client",
+            "args": [
+                "${workspaceFolder}/src/raspberry_pi_client/raspberry_pi_client.env"
+            ],
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "Build C RaspberryPi",
+            "presentation": {
+                "order": 6,
+                "group": "C"
+            }
+        },
+        {
+            "name": "C RaspberryPi Server",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/build/server_client",
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/src/server_client",
+            "args": [
+                "${workspaceFolder}/src/server_client/server_client.env"
+            ],
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "Build C RaspberryPi",
+            "presentation": {
+                "order": 7,
+                "group": "C"
+            }
+        }
+    ],
+    "compounds": [
+        {
+            "name": "C RaspberryPi",
+            "configurations": [
+                "C RaspberryPi Client",
+                "C RaspberryPi Server"
+            ],
+            "stopAll": true,
+            "presentation": {
+                "order": 2,
+                "group": "C"
+            }
+        }
+    ]
+}
