@@ -1,6 +1,6 @@
 # Getting Started
 
-| [Create the Client Certificate](#lock-create-the-client-certificate) | [Configure Event Grid Namespaces](#triangular_ruler-configure-event-grid-namespaces) | [Configure Mosquitto](#fly-configure-mosquitto) | [Run the PoC](#game_die-run-the-PoC) |
+| [Create the Client Certificate](#lock-create-the-client-certificate) | [Configure Event Grid Namespaces](#triangular_ruler-configure-event-grid-namespaces) | [Run the PoC](#game_die-run-the-PoC) |
 
 This scenario showcases how to create resources such as client, topic spaces, and permission bindings to publish and subscribe MQTT messages.
 
@@ -19,7 +19,6 @@ The PoC provides step by step instructions on how to perform following tasks:
 |Client|Role|Operation|Topic/Topic Filter|
 |------|----|---------|------------------|
 |raspberry_pi_client|publisher|publish|devices/raspberry_pi|
-|server_client|subscriber|subscribe|devices/+|
 
 
 ##  Create the client certificate
@@ -38,16 +37,6 @@ step certificate create \
     --not-after 2400h
 ```
 
-
-```bash
-# from folder scenarios/raspberry_pi
-step certificate create \
-    server_client server_client.pem server_client.key \
-    --ca ~/.step/certs/intermediate_ca.crt \
-    --ca-key ~/.step/secrets/intermediate_ca_key \
-    --no-password --insecure \
-    --not-after 2400h
-```
 
 ## Configure Event Grid Namespaces
 

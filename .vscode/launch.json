@@ -23,37 +23,13 @@
                 "order": 6,
                 "group": "C"
             }
-        },
-        {
-            "name": "C RaspberryPi Server",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "${workspaceFolder}/src/build/server_client",
-            "stopAtEntry": false,
-            "cwd": "${workspaceFolder}/src/server_client",
-            "args": [
-                "${workspaceFolder}/src/server_client/server_client.env"
-            ],
-            "setupCommands": [
-                {
-                    "description": "Enable pretty-printing for gdb",
-                    "text": "-enable-pretty-printing",
-                    "ignoreFailures": true
-                }
-            ],
-            "preLaunchTask": "Build C RaspberryPi",
-            "presentation": {
-                "order": 7,
-                "group": "C"
-            }
         }
     ],
     "compounds": [
         {
             "name": "C RaspberryPi",
             "configurations": [
-                "C RaspberryPi Client",
-                "C RaspberryPi Server"
+                "C RaspberryPi Client"
             ],
             "stopAll": true,
             "presentation": {

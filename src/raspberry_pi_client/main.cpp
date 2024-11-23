@@ -1,96 +1,67 @@
-#include <chrono>
-#include <iostream>
-#include <string>
-#include <thread>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "MQTTClient.h"
 
-// #include "bme280.c"
-#include "bme280.h"
-#include "logging.h"
-#include "mosquitto.h"
-#include "mqtt_callbacks.h"
-#include "mqtt_setup.h"
+// Include sensor library headers as needed
+// #include "bme280.h"
 
-constexpr char PUB_TOPIC[] = "devices/rasp";
-constexpr int QOS_LEVEL = 1;
-constexpr int MQTT_VERSION = MQTT_PROTOCOL_V311;
+#define ADDRESS     "tcp://yourbrokeraddress:1883"
+#define CLIENTID    "ExampleClientPub"
+#define TOPIC       "devices/rasp"
+#define QOS         1
+#define TIMEOUT     10000L
 
 int main(int argc, char* argv[])
 {
-  std::string payload;
-  struct mosquitto* mosq;
-  int result = MOSQ_ERR_SUCCESS;
+    MQTTClient client;
+    MQTTClient_connectOptions conn_opts = MQTTClient_connectOptions_initializer;
+    MQTTClient_message pubmsg = MQTTClient_message_initializer;
+    MQTTClient_deliveryToken token;
+    int rc;
 
-  mqtt_client_obj obj = { 0 };
-  obj.mqtt_version = MQTT_VERSION;
+    // Initialize sensor or other components as necessary
+    // Bme280Sensor sensor;
 
-  try
-  {
-    mosq = mqtt_client_init(true, argv[1], on_connect, &obj);
-    if (!mosq)
+    MQTTClient_create(&client, ADDRESS, CLIENTID,
+        MQTTCLIENT_PERSISTENCE_NONE, NULL);
+    conn_opts.keepAliveInterval = 20;
+    conn_opts.cleansession = 1;
+    // Set up SSL/TLS options if necessary
+    // conn_opts.ssl = &ssl_opts;
+
+    if ((rc = MQTTClient_connect(client, &conn_opts)) != MQTTCLIENT_SUCCESS)
     {
-      throw std::runtime_error("Failed to initialize MQTT client.");
+        printf("Failed to connect, return code %d\n", rc);
+        exit(EXIT_FAILURE);
     }
 
-    result = mosquitto_connect_bind_v5(
-        mosq, obj.hostname, obj.tcp_port, obj.keep_alive_in_seconds, nullptr, nullptr);
-    if (result != MOSQ_ERR_SUCCESS)
+    char payload[100]; // Adjust payload size as necessary
+
+    while (1) // Replace with a condition to exit as needed
     {
-      throw std::runtime_error("Failed to connect: " + std::string(mosquitto_strerror(result)));
+        // Read sensor data or generate payload as necessary
+        // Bme280Data data = sensor.readBME280();
+        // snprintf(payload, sizeof(payload), "Temp: %.2f°C Pressure: %.2f hPa Humidity: %.2f%%.", data.temperature, data.pressure, data.humidity);
+
+        snprintf(payload, sizeof(payload), "Hello World!"); // Example payload
+
+        pubmsg.payload = payload;
+        pubmsg.payloadlen = strlen(payload);
+        pubmsg.qos = QOS;
+        pubmsg.retained = 0;
+        MQTTClient_publishMessage(client, TOPIC, &pubmsg, &token);
+        printf("Waiting for up to %ld seconds for publication of %s\n"
+                "on topic %s for client with ClientID: %s\n",
+                (long int)TIMEOUT/1000, payload, TOPIC, CLIENTID);
+        rc = MQTTClient_waitForCompletion(client, token, TIMEOUT);
+        printf("Message with delivery token %d delivered\n", token);
+
+        // Adjust the sleep time as necessary
+        // sleep(1);
     }
 
-    result = mosquitto_loop_start(mosq);
-    if (result != MOSQ_ERR_SUCCESS)
-    {
-      throw std::runtime_error(
-          "Failure starting mosquitto loop: " + std::string(mosquitto_strerror(result)));
-    }
-
-    while (keep_running)
-    {
-      Bme280Sensor sensor;
-      if (!sensor.initialize())
-      {
-        return -1;
-      }
-
-      Bme280Data data = sensor.readBME280();
-
-      payload = "Temp: " + std::to_string(data.temperature)
-          + "°C Pressure: " + std::to_string(data.pressure)
-          + " hPa Humidity: " + std::to_string(data.humidity) + "%.";
-      std::cout << payload << std::endl;
-
-      result = mosquitto_publish_v5(
-          mosq,
-          nullptr,
-          PUB_TOPIC,
-          static_cast<int>(payload.length()),
-          payload.c_str(),
-          QOS_LEVEL,
-          false,
-          nullptr);
-      if (result != MOSQ_ERR_SUCCESS)
-      {
-        throw std::runtime_error(
-            "Failure while publishing: " + std::string(mosquitto_strerror(result)));
-      }
-
-      std::this_thread::sleep_for(std::chrono::seconds(5));
-    }
-  }
-  catch (const std::exception& e)
-  {
-    std::cerr << "Error: " << e.what() << std::endl;
-    result = MOSQ_ERR_UNKNOWN;
-  }
-
-  if (mosq)
-  {
-    mosquitto_disconnect_v5(mosq, result, nullptr);
-    mosquitto_loop_stop(mosq, false);
-    mosquitto_destroy(mosq);
-  }
-  mosquitto_lib_cleanup();
-
-  return result;
+    MQTTClient_disconnect(client, 10000);
+    MQTTClient_destroy(&client);
+    return rc;
 }

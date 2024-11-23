@@ -28,7 +28,6 @@ These samples provide guidance to build Pub/Sub applications targeting MQTT Brok
 
 The instructions are provided for the following MQTT Brokers:
 - **Azure Event Grid Namespaces** 
-- **Mosquitto** for local development
 
 > Note: These samples can also be leveraged for any MQTT Broker that supports X509 certificates authentication
 

@@ -5,16 +5,6 @@
             "Component": {
                 "type": "git",
                 "git": {
-                  "CommitHash": "b0277869d9806f6fab8e1bc11c4a4987c9a79ded",
-                  "RepositoryUrl": "https://github.com/eclipse/mosquitto.git"
-                }
-            },
-            "DevelopmentDependency": false
-        },
-        {
-            "Component": {
-                "type": "git",
-                "git": {
                   "CommitHash": "a1f879b29c9aafe6a2bc0ba885701f8f4f19f772",
                   "RepositoryUrl": "https://github.com/ninja-build/ninja.git"
                 }
