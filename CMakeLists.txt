@@ -14,9 +14,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 # include_directories(${MOSQUITTO_CLIENT_EXTENSIONS_DIR})
 
 # Find the Paho MQTT C library
-find_library(PAHO_MQTT_C paho-mqtt3c)
+find_library(PAHO_MQTT_C paho-mqtt3cs)
 
-# find_library(PAHO_MQTT_C NAMES paho-mqtt3c
+# find_library(PAHO_MQTT_C NAMES paho-mqtt3cs
 #              HINTS "/path/to/paho/installation")
 
 set(SENSOR_EXTENSIONS_DIR ${CMAKE_CURRENT_LIST_DIR}/sensors_file)

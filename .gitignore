@@ -388,3 +388,4 @@ package-lock.json
 *v8.log
 **/tsconfig.tsbuildinfo
 notes.md
+certificates/
