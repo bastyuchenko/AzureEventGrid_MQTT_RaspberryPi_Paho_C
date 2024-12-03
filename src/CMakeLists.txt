@@ -6,4 +6,4 @@ add_executable (raspberry_pi_client
   ${CMAKE_CURRENT_LIST_DIR}/raspberry_pi_client/main.cpp
 )
 
-target_link_libraries(raspberry_pi_client "${PAHO_MQTT_C}")
+target_link_libraries(raspberry_pi_client "${PAHO_MQTT_C}" dotenv)

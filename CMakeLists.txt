@@ -7,18 +7,19 @@ set(CMAKE_C_STANDARD_REQUIRED True)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-# link_libraries(mosquitto)
-
-# set(MOSQUITTO_CLIENT_EXTENSIONS_DIR ${CMAKE_CURRENT_LIST_DIR}/mqttclients/c/mosquitto_client_extensions)
-# file(GLOB MOSQUITTO_CLIENT_EXTENSIONS ${MOSQUITTO_CLIENT_EXTENSIONS_DIR}/*.c)
-# include_directories(${MOSQUITTO_CLIENT_EXTENSIONS_DIR})
-
 # Find the Paho MQTT C library
 find_library(PAHO_MQTT_C paho-mqtt3cs)
 
-# find_library(PAHO_MQTT_C NAMES paho-mqtt3cs
-#              HINTS "/path/to/paho/installation")
+# Add libs directory to library search path
+include_directories(${CMAKE_SOURCE_DIR}/libs)
+link_directories(${CMAKE_SOURCE_DIR}/libs)
+set(PROJECT_LIB_DIR ${CMAKE_SOURCE_DIR}/libs)
 
+# Add dotenv library to project
+add_library(dotenv SHARED IMPORTED)
+set_target_properties(dotenv PROPERTIES IMPORTED_LOCATION ${PROJECT_LIB_DIR}/libdotenv.so)
+
+# Add sensors files
 set(SENSOR_EXTENSIONS_DIR ${CMAKE_CURRENT_LIST_DIR}/sensors_file)
 file(GLOB SENSOR_EXTENSIONS ${SENSOR_EXTENSIONS_DIR}/*.c ${SENSOR_EXTENSIONS_DIR}/*.cpp)
 include_directories(${SENSOR_EXTENSIONS_DIR})
